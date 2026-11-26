@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Reflexión Escrita - Metodología I - La Muelita Cuyana</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 20mm;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      line-height: 1.6;
+      margin: 0;
+      padding: 40px;
+      max-width: 900px;
+      margin: 0 auto;
+      background-color: #ffffff;
+    }
+    header {
+      border-bottom: 2px solid #0284c7;
+      padding-bottom: 16px;
+      margin-bottom: 28px;
+    }
+    h1 {
+      font-size: 24px;
+      color: #0f172a;
+      margin: 0 0 8px 0;
+    }
+    .subtitle {
+      font-size: 14px;
+      color: #64748b;
+      margin: 0;
+    }
+    .meta-box {
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 24px;
+      font-size: 13.5px;
+    }
+    .meta-box strong {
+      color: #0369a1;
+    }
+    h2 {
+      font-size: 17px;
+      color: #0369a1;
+      border-left: 4px solid #0284c7;
+      padding-left: 10px;
+      margin-top: 26px;
+      margin-bottom: 12px;
+    }
+    h3 {
+      font-size: 14.5px;
+      color: #334155;
+      margin-top: 14px;
+      margin-bottom: 6px;
+    }
+    p, li {
+      font-size: 14px;
+      color: #334155;
+    }
+    ul {
+      margin-top: 6px;
+      padding-left: 20px;
+    }
+    li {
+      margin-bottom: 6px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 12.5px;
+    }
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 9px 11px;
+      text-align: left;
+    }
+    th {
+      background-color: #f1f5f9;
+      color: #0f172a;
+      font-weight: 600;
+    }
+    tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+    code {
+      background-color: #f1f5f9;
+      color: #0f172a;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+    }
+    pre {
+      background-color: #0f172a;
+      color: #e2e8f0;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      overflow-x: auto;
+    }
+    .callout {
+      background-color: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 6px;
+      padding: 12px 16px;
+      margin: 14px 0;
+      font-size: 13.5px;
+    }
+    @media print {
+      body { padding: 0; }
+      .meta-box { border-color: #ccc; }
+      h2 { page-break-after: avoid; }
+      table { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Reflexión Escrita sobre Metodología y Desarrollo con Agentes de IA</h1>
+    <p class="subtitle">Metodología de Sistemas I — Tecnicatura Universitaria en Programación (UTN FRM)</p>
+  </header>
+
+  <div class="meta-box">
+    <strong>Proyecto:</strong> Sistema de Gestión Odontológica "La Muelita Cuyana"<br>
+    <strong>Equipo de Desarrollo:</strong> Sebastián Gómez (Lead), Tomás Ruti, Diego González, Gaspar González, Facundo López Romera.<br>
+    <strong>Metodología de Trabajo:</strong> OpenSpec (OPSX), Git Forking Workflow, Strict TDD, Memoria Persistente (Engram).
+  </div>
+
+  <h2>1. ¿Qué información del Discovery resultó incorrecta, no verificable o inventada por el agente? ¿Cómo lo detectaron?</h2>
+  <p>Durante la fase inicial de Discovery, el agente generó propuestas sobredimensionadas y descontextualizadas respecto de la realidad operativa de un consultorio odontológico mediano en Argentina. En particular, detectamos tres puntos críticos de información no verificable o alucinada:</p>
+  <ul>
+    <li><strong>Integración con API oficial de WhatsApp Cloud Business y pagos con Stripe:</strong> El agente asumió como requisito mandatorio la integración directa con Meta for Business (con costos fijos en dólares por mensaje saliente) y cobro online con Stripe. Al contrastarlo con la realidad de las clínicas barriales, detectamos que operan con cobro en mostrador (efectivo/transferencia) y no incurren en costos de mensajería empresarial para recordatorios básicos.</li>
+    <li><strong>Telemedicina / Consultas virtuales:</strong> El agente propuso un módulo de videollamadas para atención odontológica remota. Detectamos inmediatamente la inviabilidad funcional del requerimiento: el acto odontológico es eminentemente físico, manual e instrumental (inspección de piezas, operatoria, radiología).</li>
+    <li><strong>Cálculo estático de turnos sin contemplar duración de tratamientos:</strong> Inicialmente propuso una grilla fija de turnos de 15 minutos idéntica para cualquier especialidad, omitiendo que procedimientos quirúrgicos o de conducto demandan bloques variables (30 a 60 minutos).</li>
+  </ul>
+  <p><strong>¿Cómo lo detectamos?</strong> Mediante la confrontación crítica en el checklist de Discovery: cruzamos las suposiciones de la IA contra entrevistas reales de operatoria odontológica y definimos supuestos explícitos en <code>knowledge-base/09_decisiones_y_supuestos.md</code> (SU-01 y SU-02), recortando el alcance hacia un MVP sólido con adaptadores simulados (mock/log para WhatsApp) y notificaciones por correo electrónico SMTP estándar.</p>
+
+  <h2>2. ¿En qué etapa usaron <em>Ajustar</em>, qué estaba mal y qué habría pasado si hubieran apretado <em>Continuar</em>?</h2>
+  <p>Utilizamos la acción <strong>Ajustar</strong> de forma activa en dos momentos bisagra del ciclo de especificación (OpenSpec):</p>
+  
+  <h3>Caso A: En el Propose de C-06 (<code>turnos-agenda-backend</code>)</h3>
+  <ul>
+    <li><strong>Qué estaba mal:</strong> En la propuesta original de la IA, la validación de colisiones de turnos se resolvía en la capa de servicio mediante una simple consulta booleana en memoria (<code>findByOdontologoAndFechaHora</code>).</li>
+    <li><strong>Qué habría pasado si hubiéramos apretado Continuar:</strong> En un entorno concurrente donde dos recepcionistas o pacientes intentan reservar al mismo profesional en el mismo horario simultáneamente, ambas transacciones hubieran leído la base de datos como "libre" antes de escribir, produciendo una condición de carrera (<em>race condition</em>) y registrando turnos duplicados para el mismo odontólogo.</li>
+    <li><strong>El ajuste aplicado:</strong> Rechazamos el diseño preliminar y exigimos incorporar un <strong>bloqueo pesimista a nivel de base de datos (<code>PESSIMISTIC_WRITE</code>)</strong> con índice compuesto y respuesta controlada <code>409 Conflict</code>.</li>
+  </ul>
+
+  <h3>Caso B: En el Propose de C-08 (<code>historia-clinica-evoluciones</code>)</h3>
+  <ul>
+    <li><strong>Qué estaba mal:</strong> El agente generó un diseño estándar con endpoints de CRUD completo para las notas de evolución clínica, incluyendo operaciones <code>PUT</code> (modificar) y <code>DELETE</code> (borrar).</li>
+    <li><strong>Qué habría pasado si hubiéramos apretado Continuar:</strong> Habríamos violado la legislación sanitaria vigente (Ley 26.529 de Derechos del Paciente e Historia Clínica en Argentina), la cual estipula taxativamente que los asientos médicos son documentos legales inalterables que no pueden ser borrados ni modificados una vez asentados.</li>
+    <li><strong>El ajuste aplicado:</strong> Modificamos la especificación para imponer <strong>inmutabilidad clínica estricta</strong>: la entidad se anotó con <code>@Immutable</code>, se bloquearon mutaciones en JPA y se restringió la creación exclusivamente a usuarios autenticados con rol <code>ODONTOLOGO</code>.</li>
+  </ul>
+
+  <h2>3. ¿Qué diferencia notaron entre implementar con una especificación aprobada y pedir código con un prompt suelto?</h2>
+  <p>La diferencia entre ambos enfoques fue la línea divisoria entre el caos y el desarrollo profesional predecible:</p>
+  <ul>
+    <li><strong>Con un prompt suelto:</strong> Pedir código directo genera soluciones aisladas y dispersas: el modelo inventa nombres de atributos (ej. <code>fecha_turno</code> en un archivo y <code>appointmentDate</code> en otro), usa tipos de datos dispares (timestamp numérico vs. ISO-8601), ignora patrones arquitectónicos (mete lógica de negocio en controladores) y genera dependencias circulares. Cada integrante recibía código incompatible con el de sus compañeros.</li>
+    <li><strong>Con una especificación aprobada (OpenSpec + TDD):</strong>
+      <ol>
+        <li><strong>Contratos innegociables:</strong> El DTO de entrada, el DTO de salida y los códigos HTTP estaban fijados en el <code>proposal.md</code> y <code>specs/</code> antes de codificar.</li>
+        <li><strong>Eliminación del código innecesario (<em>bloatware</em>):</strong> Al regirnos por Strict TDD, la IA solo tenía permitido escribir el código estrictamente necesario para hacer pasar los tests unitarios e integrales que reflejaban los escenarios del spec.</li>
+        <li><strong>Paralelismo real:</strong> Diego implementó pacientes (C-05) mientras Tomás implementaba profesionales (C-04) sin romper nada, porque ambos se acoplaban a los contratos del Core (C-02) sin ambigüedades.</li>
+      </ol>
+    </li>
+  </ul>
+
+  <h2>4. ¿Qué parte de la fundación (knowledge-base, roadmap, reglas) le aportó más valor al ciclo OPSX y cuál menos?</h2>
+  <div class="callout">
+    <strong>Lo que más valor aportó:</strong><br>
+    <strong>1. El Roadmap de dependencias (<code>CHANGES.md</code>):</strong> Fue el mapa de navegación operativo. Establecer claramente el camino crítico (<code>C-01 → C-02 → C-03 → C-04 → C-06 → C-07</code>) y los puntos de sincronización (<em>gates</em>) evitó que los integrantes intentaran construir interfaces sobre servicios que todavía no tenían contratos estables.<br>
+    <strong>2. Las Reglas Duras (<code>AGENTS.md</code>):</strong> Instrucciones como <em>"TDD estricto obligatorio"</em>, <em>"Prohibido exponer entidades JPA en controladores"</em> y <em>"Respuestas uniformes vía GlobalExceptionHandler"</em> actuaron como un compilador de buenas prácticas para la IA, evitando regresiones en los 116 tests del sistema.
+  </div>
+  <p><strong>Lo que menos valor aportó:</strong> Los documentos descriptivos narrativos de la Knowledge Base (ej. <code>10_preguntas_abiertas.md</code> o secciones genéricas de visión). Si bien fueron útiles para el arranque conceptual, una vez que el proyecto entró en la fase de implementación de código, la IA rara vez consultaba reflexiones teóricas abiertas. Toda la fuerza operativa residió en los contratos de datos (<code>05_modelo_de_datos.md</code>), las reglas de negocio (<code>06_reglas_de_negocio.md</code>) y las especificaciones atómicas de cada change en <code>openspec/</code>.</p>
+
+  <h2>5. En grupo: qué hizo cada integrante y en qué etapa</h2>
+  <p>El trabajo se coordinó mediante el modelo de <strong>Git Forking Workflow</strong>, donde cada integrante trabajó en su repositorio bifurcado y submitted Pull Requests hacia el repositorio central de la organización:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Integrante</th>
+        <th>Rol</th>
+        <th>Etapa / Changes Asignados</th>
+        <th>Tareas Clave Desarrolladas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Sebastián Gómez</strong></td>
+        <td>Lead Developer / Tech Lead</td>
+        <td><strong>Fase 0: Cimientos y Core</strong><br>• C-01 foundation-setup<br>• C-02 core-models</td>
+        <td>Setup del monorepo, configuración de Docker Compose (PostgreSQL 15), Gradle y TypeScript. Creación de <code>AuditableEntity</code> (auditoría y soft-delete), entidad <code>Usuario</code>, <code>GlobalExceptionHandler</code> y seed inicial. Auditoría y merge de los PRs #5 al #11, resolución de conflictos de ramas y persistencia de memoria Engram.</td>
+      </tr>
+      <tr>
+        <td><strong>Tomás Ruti</strong></td>
+        <td>Backend Developer</td>
+        <td><strong>Fase 1: Seguridad y Catálogo</strong><br>• C-03 auth-jwt<br>• C-04 profesionales-service</td>
+        <td>Arquitectura de seguridad con Spring Security 6 stateless y JWT HMAC-SHA256. Filtro de autorización con denegación 403 a cuentas inactivas. Entidad <code>Odontologo</code>, catálogo público sin auth y CRUD administrativo protegido. (PR #5 y PR #6).</td>
+      </tr>
+      <tr>
+        <td><strong>Diego González</strong></td>
+        <td>Backend Developer</td>
+        <td><strong>Fase 1 y 2: Pacientes y Clínica</strong><br>• C-05 pacientes-service<br>• C-08 historia-clinica-evoluciones</td>
+        <td>Entidad <code>Paciente</code> con vinculación de historia clínica automática y soft-delete. Módulo legal de <code>EvolucionClinica</code> con inmutabilidad estricta (<code>@Immutable</code>), restricción RBAC para odontólogos y transición automática de turnos a <code>ATENDIDO</code>. (PR #7 y PR #10).</td>
+      </tr>
+      <tr>
+        <td><strong>Gaspar González</strong></td>
+        <td>Backend Developer</td>
+        <td><strong>Fase 2: Agenda y Eventos</strong><br>• C-06 turnos-agenda-backend<br>• C-09 notificaciones-turnos</td>
+        <td>Motor de agenda con cálculo de slots disponibles y bloqueo pesimista (<code>PESSIMISTIC_WRITE</code>) anti-colisión. Arquitectura desacoplada de notificaciones con <code>@EventListener</code> asíncrono y adapters tolerantes a fallos para Email y WhatsApp mock. (PR #8 y PR #9).</td>
+      </tr>
+      <tr>
+        <td><strong>Facundo López Romera</strong></td>
+        <td>Frontend Specialist</td>
+        <td><strong>Fase 2: Interfaz Web y UX</strong><br>• C-07 agenda-web-frontend</td>
+        <td>Arquitectura cliente en TypeScript vanilla modular y HTML5/CSS3 consumiendo tokens de diseño. Vistas de <code>login.html</code>, <code>registro.html</code> y <code>dashboard.html</code>. Cliente HTTP tipado con Bearer JWT, calendario interactivo de turnos, modales accesibles y cancelación en vivo. (PR #11).</td>
+      </tr>
+    </tbody>
+  </table>
+
+</body>
+</html>
